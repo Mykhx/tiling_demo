@@ -112,16 +112,6 @@ void tilingomp1(double* a, double* b, double* c ,int m, int n, int itile, int jt
 				for(x = i; x < imin; x++){
 					for(y = j; y < jmin; y++){
 						for(z = k; z < kmin ; z++){
-
-						/*	cout << "accessing" << endl;
-							cout << x*m + y << " of " << m*m << endl;
-							cout << x*m + z << " of " << m*n << endl;
-							cout << z*m + y << " of " << m*n << endl;
-
-							cout << x*m + y << " c " <<  c[ x * m + y ] << endl;
-							cout << x*m + z << " a " <<  a[ x * m + z ] << endl;
-							cout << z*m + y << " b " <<  b[ z * m + y ] << endl;
-							*/
 							c[ x * m + y ] += a[ x * m + z ] * b[ z * m + y ];
 							// this will not work due to the race condition
 						}
@@ -158,16 +148,6 @@ void tiling(double* a, double* b, double* c ,int m, int n, int itile, int jtile,
 				for(x = i; x < imin; x++){
 					for(y = j; y < jmin; y++){
 						for(z = k; z < kmin ; z++){
-
-						/*	cout << "accessing" << endl;
-							cout << x*m + y << " of " << m*m << endl;
-							cout << x*m + z << " of " << m*n << endl;
-							cout << z*m + y << " of " << m*n << endl;
-
-							cout << x*m + y << " c " <<  c[ x * m + y ] << endl;
-							cout << x*m + z << " a " <<  a[ x * m + z ] << endl;
-							cout << z*m + y << " b " <<  b[ z * m + y ] << endl;
-							*/
 							c[ x * m + y ] += a[ x * m + z ] * b[ z * m + y ];
 						}
 					}
@@ -203,16 +183,6 @@ void tiling0(double* a, double* b, double* c ,int m, int n, int itile, int jtile
 				for(x = i; x < std::min(i+itile,n); x++){
 					for(y = j; y < std::min(j+jtile,m); y++){
 						for(z = k; z < std::min(k+ktile,n) ; z++){
-
-						/*	cout << "accessing" << endl;
-							cout << x*m + y << " of " << m*m << endl;
-							cout << x*m + z << " of " << m*n << endl;
-							cout << z*m + y << " of " << m*n << endl;
-
-							cout << x*m + y << " c " <<  c[ x * m + y ] << endl;
-							cout << x*m + z << " a " <<  a[ x * m + z ] << endl;
-							cout << z*m + y << " b " <<  b[ z * m + y ] << endl;
-							*/
 							c[ x * m + y ] += a[ x * m + z ] * b[ z * m + y ];
 						}
 					}
