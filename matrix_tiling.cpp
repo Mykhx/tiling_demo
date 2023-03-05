@@ -11,9 +11,8 @@ using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
-//using std::setprecision;
 
-// generate random matrix
+// bounds for matrix values
 constexpr int MAX =  100 ;
 constexpr int MIN = -100 ;
 
@@ -27,10 +26,7 @@ void extrem(double d, double& rmin, double& rmax, double& rabsmin){
 
 void __attribute__((optimize("O0"))) mulabcO0(double* a, double* b, double* c ,int m, int n){
 
-	// profiling
 	auto ts1 = high_resolution_clock::now();
-
-	// tiled loop
 	int i,j,k,x,y,z;
 	for(i=0; i<m; i++ ){
 		for(j = 0; j<m; j++ ){
@@ -40,7 +36,6 @@ void __attribute__((optimize("O0"))) mulabcO0(double* a, double* b, double* c ,i
 		}
 	}
 
-	// profiling
 	auto ts2 = high_resolution_clock::now();
 	duration<double, std::milli> ms_double = ts2 - ts1 ;
 	cout << "Total execution time is " << ms_double.count() << " ms " << endl;
@@ -49,10 +44,8 @@ void __attribute__((optimize("O0"))) mulabcO0(double* a, double* b, double* c ,i
 // take better advantage of locality
 void __attribute__((optimize("O0"))) mulabcO0ikj(double* a, double* b, double* c ,int m, int n){
 
-	// profiling
 	auto ts1 = high_resolution_clock::now();
 
-	// tiled loop
 	int i,j,k,x,y,z;
 	for(i=0; i<m; i++ ){
 		for(k=0; k<n; k++ ){
@@ -62,7 +55,6 @@ void __attribute__((optimize("O0"))) mulabcO0ikj(double* a, double* b, double* c
 		}
 	}
 
-	// profiling
 	auto ts2 = high_resolution_clock::now();
 	duration<double, std::milli> ms_double = ts2 - ts1 ;
 	cout << "Total execution time is " << ms_double.count() << " ms " << endl;
@@ -70,10 +62,8 @@ void __attribute__((optimize("O0"))) mulabcO0ikj(double* a, double* b, double* c
 
 void mulabc(double* a, double* b, double* c ,int m, int n){
 
-	// profiling
 	auto ts1 = high_resolution_clock::now();
 
-	// tiled loop
 	int i,j,k,x,y,z;
 	for(i=0; i<m; i++ ){
 		for(j = 0; j<m; j++ ){
@@ -83,7 +73,6 @@ void mulabc(double* a, double* b, double* c ,int m, int n){
 		}
 	}
 
-	// profiling
 	auto ts2 = high_resolution_clock::now();
 	duration<double, std::milli> ms_double = ts2 - ts1 ;
 	cout << "Total execution time is " << ms_double.count() << " ms " << endl;
@@ -91,15 +80,12 @@ void mulabc(double* a, double* b, double* c ,int m, int n){
 
 void tilingomp1(double* a, double* b, double* c ,int m, int n, int itile, int jtile, int ktile){
 
-	// init
 	int kmin = 0;
 	int jmin = 0;
 	int imin = 0;
 
-	// profiling
 	auto ts1 = high_resolution_clock::now();
 
-	// tiled loop
 	int i,j,k,x,y,z;
 #pragma parallel omp for
 	{
@@ -121,7 +107,6 @@ void tilingomp1(double* a, double* b, double* c ,int m, int n, int itile, int jt
 		}
 	}
 	}
-	// profiling
 	auto ts2 = high_resolution_clock::now();
 	duration<double, std::milli> ms_double = ts2 - ts1 ;
 	cout << "Total execution time is " << ms_double.count() << " ms " << endl;
@@ -129,15 +114,12 @@ void tilingomp1(double* a, double* b, double* c ,int m, int n, int itile, int jt
 
 void tiling(double* a, double* b, double* c ,int m, int n, int itile, int jtile, int ktile){
 
-	// init
 	int kmin = 0;
 	int jmin = 0;
 	int imin = 0;
 
-	// profiling
 	auto ts1 = high_resolution_clock::now();
 
-	// tiled loop
 	int i,j,k,x,y,z;
 	for(i=0; i<m; i += itile ){
 		imin = std::min(i+itile,n);
@@ -156,7 +138,6 @@ void tiling(double* a, double* b, double* c ,int m, int n, int itile, int jtile,
 		}
 	}
 
-	// profiling
 	auto ts2 = high_resolution_clock::now();
 	duration<double, std::milli> ms_double = ts2 - ts1 ;
 	cout << "Total execution time is " << ms_double.count() << " ms " << endl;
@@ -164,15 +145,12 @@ void tiling(double* a, double* b, double* c ,int m, int n, int itile, int jtile,
 
 void tiling0(double* a, double* b, double* c ,int m, int n, int itile, int jtile, int ktile){
 
-	// init
 	int kmin = 0;
 	int jmin = 0;
 	int imin = 0;
 
-	// profiling
 	auto ts1 = high_resolution_clock::now();
 
-	// tiled loop
 	int i,j,k,x,y,z;
 	for(i=0; i<m; i += itile ){
 		//imin = std::min(i+itile,n);
@@ -191,7 +169,6 @@ void tiling0(double* a, double* b, double* c ,int m, int n, int itile, int jtile
 		}
 	}
 
-	// profiling
 	auto ts2 = high_resolution_clock::now();
 	duration<double, std::milli> ms_double = ts2 - ts1 ;
 	cout << "Total execution time is " << ms_double.count() << " ms " << endl;
@@ -202,7 +179,6 @@ void tiling0(double* a, double* b, double* c ,int m, int n, int itile, int jtile
 int main()
 {
 
-	// OMP info
 	cout << "Number of available threads: " << omp_get_num_threads() << endl;
 #pragma omp parallel
 	{
@@ -211,11 +187,9 @@ int main()
 	}
 	
 	
-	// start timer
 	auto t1 = high_resolution_clock::now();
 	cout << "Hello" << endl;
 
-	// size
 	int n = 1000 ;
 	int m = 1000 ;
 	cout << "n "<< n << endl;
@@ -224,7 +198,6 @@ int main()
 
 	srand(time(nullptr));
 
-	// setup matrix a
 	double *a = new double[m*n] ;
 	double rmin = (double) MAX ;
 	double rmax = (double) MIN ;
@@ -245,7 +218,6 @@ int main()
 	cout << "Min " <<  rmin << endl;
 	cout << "Min(abs) " <<  rabsmin << endl;
 
-	// setup matrix b
 	double *b = new double[n*m] ;
 	rmin = (double) MAX ;
 	rmax = (double) MIN ;
@@ -266,16 +238,8 @@ int main()
 	cout << "Min(abs) " <<  rabsmin << endl;
 
 
-	// setup matrix c
 	double *c = new double[m*m]() ;
 	cout << "\nMatrix C" << endl;
-//	for (int i = 0; i < m; i++) {
-//		for (int j = 0; j < m; j++) {
-//			
-//			cout << "Element " << "("<< i << ";" << j << ") " << setprecision(20) << c[i,j] << endl;
-//		}
-//		
-//	}
 
 	/////////////////////////////////////////////////////
 	//
@@ -293,10 +257,6 @@ int main()
 		for(int j=0; j<m; j++){
 			for(int k=0; k<n; k++){
 				c[i,j] += a[i,k] * b[k,j];
-//				cout << "c " << i << " "<< j << " " << c[i,j] << endl;
-//				cout << "a " << i << " "<< k << " " << a[i,k] << endl;
-//				cout << "b " << k << " "<< j << " " << b[k,j] << endl;
-
 			}
 		}
 	}
@@ -304,7 +264,6 @@ int main()
 	auto ts2 = high_resolution_clock::now();
 	duration<double, std::milli> ms_double = ts2 - ts1 ;
 
-	// zero matrix
 	memset(c, 0, m*sizeof(c));
 
 	memset(c, 0, m*sizeof(c));
@@ -314,7 +273,6 @@ int main()
 	memset(c, 0, m*sizeof(c));
 	cout << "ikj(O0)001 001 001" ;
         mulabcO0ikj(a,b,c,m,n);
-
 
 	memset(c, 0, m*sizeof(c));
 	cout << "Naive  001 001 001" ;
@@ -383,34 +341,17 @@ int main()
 	cout << "Tiling 128 128 128" ;
         tiling0(a,b,c,m,n,128,128,128);
 
-
-
-//	for (int i = 0; i < m; i++) {
-//		for (int j = 0; j < m; j++) {
-//			
-//			cout << "Element " << "("<< i << ";" << j << ") " << setprecision(20) << c[i,j] << endl;
-//		}
-//		
-//	}
-
-
-
-
 	/////////////////////////////////////////////////////
 	cout << "Ending bye" << endl ;
 
-	// total time
 	auto t2 = high_resolution_clock::now();
 
 	ms_double = t2 - t1 ;
 
 	cout << "Total execution time is " << ms_double.count() << " ms " << endl;
 
-
-	// free memory
 	delete [] a ;
 	delete [] b ;
 	delete [] c ;
-
 }
 
